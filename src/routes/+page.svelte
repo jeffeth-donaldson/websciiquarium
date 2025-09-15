@@ -1,5 +1,6 @@
 <script>
     import { allFish } from "../art/fish";
+    import Aquarium from "../components/aquarium.svelte";
     import Frame from "../components/frame.svelte";
     import Test from "../components/test.svelte";
     import { Fish } from "../elements/fish";
@@ -24,8 +25,7 @@
 </script>
 
 <div class="page">
-<h1>Welcome to WebsciiQuarium</h1>
-<Frame content={logoWithFish}/>
+<Aquarium/>
 </div>
 <style>
     .page {
@@ -33,10 +33,10 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: 100vh;
+        height: 100vh;
         background-color: #e0f7fa;
         font-family: 'Courier New', Courier, monospace;
-        padding: 20px;
+        padding: 0px;
     }
 
     h1 {
