@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Frame from './frame.svelte';
     import { Fish } from '../elements/fish.js';
     import { allFish } from '../art/fish.js';
     import { onMount } from 'svelte';
@@ -95,13 +94,12 @@
             const myFish = new Fish(fishIndex);
             const colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta", "yellow", "lime", "pink"];
             const speed = Math.random() * 0.5 + 0.1; // Speed between 0.1 and 0.6
-            const direction = 2 % fishIndex ? 'right' : 'left';
+            const direction = fishIndex % 2 === 0 ? 'right' : 'left';
             const y = Math.floor(Math.random() * (actualRowCount - myFish.height));
             const x = direction === 'right' ? -myFish.width : actualColCount;
             fishes.push({ art: myFish, x, y, speed, direction, colors });
         }
         content = asciiField.getContent();
-        console.log(content);
         // debugger;
     }, FRAME_LEN);
 </script>

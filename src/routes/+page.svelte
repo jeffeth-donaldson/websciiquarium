@@ -1,8 +1,5 @@
 <script>
-    import { allFish } from "../art/fish";
     import Aquarium from "../components/aquarium.svelte";
-    import Frame from "../components/frame.svelte";
-    import Test from "../components/test.svelte";
     import { Fish } from "../elements/fish";
     const logo = `                                                         
  _ _ _     _           _ _ _____             _           
@@ -21,7 +18,6 @@
     const colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta", "yellow", "lime", "pink"];
 
     const myFish = new Fish(currentFishIndex);
-    const logoWithFish = logo + "\n" + myFish.getDisplayArt(colors);
 </script>
 
 <div class="page">

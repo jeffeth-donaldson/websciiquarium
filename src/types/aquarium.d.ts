@@ -8,3 +8,8 @@ export interface FishEntity {
     direction: 'left' | 'right';
     colors: string[];
 }
+
+export interface Pixel {
+    char: string;
+    color: string|null;
+}

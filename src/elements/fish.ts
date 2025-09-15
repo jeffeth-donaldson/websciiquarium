@@ -1,61 +1,54 @@
 import { allFish, allFishColors } from "../art/fish";
+import type { Pixel } from "../types/aquarium";
 
 // Fish Class
 export class Fish {
-    color: string;
-    art: string;
+    color: string[];
+    art: string[];
     width: number;
     height: number;
 
     constructor(i: number) {        
-        this.color = allFishColors[i % allFishColors.length];
-        this.art = allFish[i % allFish.length];
-        this.width = this.art.split('\n')[1].length; // Approximate width
-        this.height = this.art.split('\n').length; // Approximate height
-        let color_lines = this.color.split('\n');
-        let art_lines = this.art.split('\n');
+        this.color = allFishColors[i % allFishColors.length].split('\n');
+        this.art = allFish[i % allFish.length].split('\n');
+        this.width = this.art[1].length; // Approximate width
+        this.height = this.art.length; // Approximate height
+        
         let problem = false;
-        if (color_lines.length !== art_lines.length) {
+        if (this.color.length !== this.art.length) {
             console.warn(`Fish art and color lines do not match in length for fish index ${i}`);
             // debugger;
             problem = true;
         }
-        for (let j = 0; j < art_lines.length; j++) {
-            if (art_lines[j].length > this.width) {
-                this.width = art_lines.length;
+        for (let j = 0; j < this.art.length; j++) {
+            if (this.art[j].length > this.width) {
+                this.width = this.art.length;
             }
-            if (art_lines[j].length !== color_lines[j].length) {
-                console.warn(`Fish art (${art_lines[j].length}) and color (${color_lines[j].length}) line ${1+j} do not match in length for fish index ${i}`);
+            if (this.art[j].length !== this.color[j].length) {
+                console.warn(`Fish art (${this.art[j].length}) and color (${this.color[j].length}) line ${1+j} do not match in length for fish index ${i}`);
                 // debugger;
                 problem = true;
             }
         }
         if (problem) {
             console.warn("There be problems")
-        } else {
-            console.log("Is good :)")
         }
     }
 
-    getDisplayArt(colors: string[]): string {
+    getDisplayArt(colors: string[]): Pixel[][] {
         // Iterates through the art of a fish and adds styled spans to match the color codes
         // debugger;
-        let displayArt = '';
-        let lastColor = -1;
+        let pixels: Pixel[][] = [];
         for (let i=0; i < this.art.length; i++) {
-            const colorIndex = parseInt(this.color[i]) || -1;
-            const char = this.art[i];
-            // Handle end of color scenarios
-            if (lastColor !== -1 && lastColor !== colorIndex) {
-                displayArt += '</span>';
+            pixels[i] = [];
+            for (let j=0; j < this.art[i].length; j++) {
+                const colorIndex = parseInt(this.color[i][j]) || -1;
+                const char = this.art[i][j];
+                pixels[i][j] = { char: char, color: (colorIndex >= 0) ? colors[colors.length%colorIndex] : null };
             }
-            if (colorIndex !== -1 && colorIndex !== lastColor) {
-                displayArt += `<span style="color: ${colors[(colorIndex-1) % colors.length]}">`;
-            }
-            lastColor = colorIndex;
-            displayArt += char;
+            
         }
-        return displayArt;
+        return pixels;
     }
 
 }
