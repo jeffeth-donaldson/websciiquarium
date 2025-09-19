@@ -4,6 +4,9 @@
     import { onMount } from 'svelte';
     import type { FishEntity } from '../types/aquarium';
     import { AsciiField } from '../elements/ascii_field';
+    import { createKelpInstance, getCastle, getSpriteDimensions, type KelpInstance } from '../elements/tank_decor.js';
+    import type { TerminalColorScheme } from '../types/colors.js';
+    import { choose } from '../utils/utils.js';
 
     let width: number = 500;
     let height: number = 1000;
@@ -15,6 +18,27 @@
     // Constants
     const title = "WebsciiQuarium";
     let content = "";
+    const colorScheme:TerminalColorScheme = {
+        name: "Default",
+        black: "#000000",
+        red: "#FF5555",
+        green: "#50FA7B",
+        yellow: "#F1FA8C",
+        blue: "#BD93F9",
+        magenta: "#FF79C6",
+        cyan: "#8BE9FD",
+        white: "#BFBFBF",
+        brightBlack: "#4D4D4D",
+        brightRed: "#FF6E67",
+        brightGreen: "#5AF78E",
+        brightYellow: "#F4F99D",
+        brightBlue: "#CAA9FA",
+        brightMagenta: "#FF92D0",
+        brightCyan: "#9AEDFE",
+        brightWhite: "#E6E6E6",
+    }
+    const castle = getCastle(colorScheme);
+    const castleDimensions = getSpriteDimensions(castle);
     // Figure out appropriate font size
     const IDEAL_ROW_COUNT = 60;
     const MINIMUM_FONT_SIZE = 8;
@@ -25,8 +49,33 @@
 
     let actualRowCount = 0;
     let actualColCount = 0;
+    // Position for castle
+    let castleX = -1;
+    let castleY = -1;
+    // Kelps
+    let background_kelps:KelpInstance[] = [];
+    let foreground_kelps:KelpInstance[] = [];
     const asciiField = new AsciiField(actualColCount, actualRowCount); 
     let fontSize = MINIMUM_FONT_SIZE;
+    function fishColorSchemeToList(scheme:TerminalColorScheme):string[] {
+        return [
+            scheme.red, scheme.green, scheme.yellow,
+            scheme.blue, scheme.magenta, scheme.cyan,
+            scheme.brightRed, scheme.brightGreen, scheme.brightYellow,
+            scheme.brightBlue, scheme.brightMagenta, scheme.brightCyan,
+        ];
+    }
+    function generateKelps(max_width:number, max_height:number):KelpInstance[] {
+        let kelps = [];
+        for (let x = 0; x < max_width; x++) {
+            if (Math.random() < 0.05) { // 5% chance to place a kelp
+                const kelpHeight = Math.floor(Math.random() * max_height);
+                kelps.push(createKelpInstance(x, kelpHeight, colorScheme, Math.random() > 0.5));
+                // x += KELP_WIDTH // Skip width of kelp to avoid overlap
+            }
+        } 
+        return kelps;
+    }
     function updateSize() {
         if (container) {
             console.log("Container size:", container.clientWidth, container.clientHeight);
@@ -36,6 +85,13 @@
             actualRowCount = Math.floor(height / fontSize)-ROW_OFFSET;
             actualColCount = Math.floor(width / (fontSize *0.54))-COLUMN_OFFSET; // Approximate character width
             asciiField.resize(actualColCount, actualRowCount);
+            // Position castle somewhere near bottom center
+            castleX = Math.floor(Math.max(castleDimensions.width, Math.random() * (actualColCount - castleDimensions.width)));
+            castleY = actualRowCount - castleDimensions.height;
+            // Generate kelps
+            let kelps = generateKelps(actualColCount, actualRowCount);
+            background_kelps = kelps.filter(k => k.isBackground === true);
+            foreground_kelps = kelps.filter(k => k.isBackground === false);
         }
     }
     onMount(() => {
@@ -59,11 +115,29 @@
     const FRAME_LEN = 16; // milliseconds (~60fps)
     const ONE_SECOND = 60; // 60fps
     const FISH_FREQUENCY = 5*ONE_SECOND; // Frames
+    const KELP_FREQUENCY = 2*ONE_SECOND; // Frames
     let fishTimer = FISH_FREQUENCY;
+    let kelpTimer = KELP_FREQUENCY;
     const fishes: FishEntity[] = [];
     const clock = setInterval(() => {
         // Start with blank canvas
         asciiField.fillArea();
+        // Draw Tank Decorations
+        // -- Draw Background Kelps
+        let shouldKelpAnimate = false;
+        kelpTimer--;
+        if (kelpTimer <= 0) {
+            kelpTimer = KELP_FREQUENCY;
+            shouldKelpAnimate = true;
+        }
+        background_kelps.forEach(kelpInstance => {
+            if (shouldKelpAnimate) {
+                kelpInstance.currentFrame = (kelpInstance.currentFrame + 1) % kelpInstance.frames.length;
+            }
+            asciiField.drawArt(kelpInstance.frames[kelpInstance.currentFrame], kelpInstance.x, actualRowCount - kelpInstance.height - 1);
+        });
+        // -- Draw Castle
+        asciiField.drawArt(castle, castleX, castleY);
         // Update Fish
         fishes.forEach(fish => {
             if (fish.direction === 'right') {
@@ -92,13 +166,22 @@
             // Add a new fish
             const fishIndex = Math.floor(Math.random() * allFish.length);
             const myFish = new Fish(fishIndex);
-            const colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta", "yellow", "lime", "pink"];
+            // Random color scheme from main scheme
+            const colors = choose(fishColorSchemeToList(colorScheme),7);
             const speed = Math.random() * 0.5 + 0.1; // Speed between 0.1 and 0.6
             const direction = fishIndex % 2 === 0 ? 'right' : 'left';
             const y = Math.floor(Math.random() * (actualRowCount - myFish.height));
             const x = direction === 'right' ? -myFish.width : actualColCount;
             fishes.push({ art: myFish, x, y, speed, direction, colors });
         }
+        // -- Draw Foreground Kelps
+        foreground_kelps.forEach(kelpInstance => {
+            // debugger;
+            if (shouldKelpAnimate) {
+                kelpInstance.currentFrame = (kelpInstance.currentFrame + 1) % kelpInstance.frames.length;
+            }
+            asciiField.drawArt(kelpInstance.frames[kelpInstance.currentFrame], kelpInstance.x, actualRowCount - kelpInstance.height - 1);
+        });
         content = asciiField.getContent();
         // debugger;
     }, FRAME_LEN);
