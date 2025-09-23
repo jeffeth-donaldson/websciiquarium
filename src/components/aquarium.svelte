@@ -18,25 +18,7 @@
     // Constants
     const title = "WebsciiQuarium";
     let content = "";
-    const colorScheme:TerminalColorScheme = {
-        name: "Default",
-        black: "#000000",
-        red: "#FF5555",
-        green: "#50FA7B",
-        yellow: "#F1FA8C",
-        blue: "#BD93F9",
-        magenta: "#FF79C6",
-        cyan: "#8BE9FD",
-        white: "#BFBFBF",
-        brightBlack: "#4D4D4D",
-        brightRed: "#FF6E67",
-        brightGreen: "#5AF78E",
-        brightYellow: "#F4F99D",
-        brightBlue: "#CAA9FA",
-        brightMagenta: "#FF92D0",
-        brightCyan: "#9AEDFE",
-        brightWhite: "#E6E6E6",
-    }
+    export let colorScheme:TerminalColorScheme;
     const castle = getCastle(colorScheme);
     const castleDimensions = getSpriteDimensions(castle);
     // Figure out appropriate font size
