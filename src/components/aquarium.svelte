@@ -39,14 +39,10 @@
     let foreground_kelps:KelpInstance[] = [];
     const asciiField = new AsciiField(actualColCount, actualRowCount); 
     let fontSize = MINIMUM_FONT_SIZE;
-    function fishColorSchemeToList(scheme:TerminalColorScheme):string[] {
-        return [
-            scheme.red, scheme.green, scheme.yellow,
-            scheme.blue, scheme.magenta, scheme.cyan,
-            scheme.brightRed, scheme.brightGreen, scheme.brightYellow,
-            scheme.brightBlue, scheme.brightMagenta, scheme.brightCyan,
-        ];
-    }
+    const fishColorScheme = [
+        "var(--red)", "var(--green)", "var(--yellow)", "var(--blue)", "var(--magenta)", "var(--cyan)", 
+        "var(--bright-red)", "var(--bright-green)", "var(--bright-yellow)", "var(--bright-blue)", "var(--bright-magenta)", "var(--bright-cyan)",
+    ]
     function generateKelps(max_width:number, max_height:number):KelpInstance[] {
         let kelps = [];
         for (let x = 0; x < max_width; x++) {
@@ -149,7 +145,7 @@
             const fishIndex = Math.floor(Math.random() * allFish.length);
             const myFish = new Fish(fishIndex);
             // Random color scheme from main scheme
-            const colors = choose(fishColorSchemeToList(colorScheme),7);
+            const colors = choose(fishColorScheme,7);
             const speed = Math.random() * 0.5 + 0.1; // Speed between 0.1 and 0.6
             const direction = fishIndex % 2 === 0 ? 'right' : 'left';
             const y = Math.floor(Math.random() * (actualRowCount - myFish.height));
@@ -175,7 +171,7 @@
 
 <style>
     .frame {
-        background-color: #000000;
+        background-color: var(--black);
         box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         /* border-radius: 8px; */
         width:100%;

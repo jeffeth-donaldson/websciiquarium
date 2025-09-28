@@ -2,26 +2,30 @@
     import type { Component } from "svelte";
     import type { TerminalColorScheme } from "../types/colors";
     import Aboutmodal from "./modals/aboutmodal.svelte";
+    import Colorsettingsmodal from "./modals/colorsettingsmodal.svelte";
 
     
 
     export let expanded: boolean;
-    export let colors: TerminalColorScheme;
     export let appName: string = 'WebsciiQuarium';
     export let version: string = 'v1.0.0';
 
 
     let aboutVisible:Boolean = false;
-    let showSettings = false;
+    let colorSettingsVisible = false;
     let showInstall = false;
 
     const showAbout = () => {
         aboutVisible = true;
     };
 
+    const showColorSettings = () => {
+        colorSettingsVisible = true;
+    };
+
 
     const headerButtons: [string, Function|null|string][] = [
-        ['Settings', null],
+        ['Color Settings', showColorSettings],
         ['Install', null],
         ['About', showAbout],
         ['Github', "https://github.com/jeffeth-donaldson/websciiquarium"],
@@ -31,19 +35,18 @@
 
 <div
     class="header-container {expanded ? 'expanded' : ''}"
-    style="--header-bg: {colors.brightBlack}"
     aria-hidden={!expanded}
 >
-    <div class="header-content" style="color: {colors.brightWhite}">
+    <div class="header-content">
         <div class="header-main">
             <div class="header-title">{appName}</div>
             <div class="header-buttons">
                 {#each Array.from(headerButtons) as [label, link]}
                     {#if typeof link === 'string'}
-                        <a href={link} style="color: {colors.brightWhite}">{label}</a>
+                        <a href={link}>{label}</a>
 
                     {:else if typeof link === 'function'}
-                        <button style="color: {colors.brightWhite}" on:click={() => link()}>
+                        <button on:click={() => link()}>
                             {label}
                         </button>
                     {/if}
@@ -55,7 +58,8 @@
         </div>
     </div>
 </div>
-<Aboutmodal bind:open={aboutVisible} colorScheme={colors}/>
+<Aboutmodal bind:open={aboutVisible}/>
+<Colorsettingsmodal bind:open={colorSettingsVisible}/>
 
 <style>
     .header-container {
@@ -79,7 +83,8 @@
         flex-direction: column;
         align-items: stretch;
         padding: 1rem 2rem 0.5rem 2rem;
-        background: var(--header-bg);
+        background: var(--bright-black);
+        color: var(--bright-white);
         border-bottom-left-radius: 1rem;
         border-bottom-right-radius: 1rem;
         box-shadow: 0 4px 16px rgba(0,0,0,0.15);
@@ -104,7 +109,8 @@
     }
     .header-buttons button,
     .header-buttons a {
-        background: rgba(255,255,255,0.08);
+        color: var(--black);
+        background: var(--blue);
         border: none;
         border-radius: 0.4rem;
         padding: 0.5rem 1rem;
@@ -116,7 +122,7 @@
     }
     .header-buttons button:hover,
     .header-buttons a:hover {
-        background: rgba(255,255,255,0.18);
+        background: var(--bright-blue);
     }
     .header-footer {
         margin-top: 0.5rem;

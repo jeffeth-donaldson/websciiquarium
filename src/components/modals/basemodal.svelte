@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { showModal = $bindable(), colorScheme,  header, children } = $props();
+	let { showModal = $bindable(), header, children } = $props();
 
 	let dialog:HTMLDialogElement|undefined = $state(); // HTMLDialogElement
 
@@ -13,7 +13,6 @@
 bind:this={dialog}
 onclose={() => (showModal = false)}
 onclick={(e) => { if (e.target === dialog) dialog.close(); }}
-style="background: {colorScheme.brightBlack}; color: {colorScheme.brightWhite}; --link-color: {colorScheme.brightCyan}; --visited-link-color: {colorScheme.magenta};"
 >
     <button aria-label="Close Dialog" autofocus onclick={() => {if (dialog) dialog.close()}}>&#10005;</button>
 	<div>
@@ -25,10 +24,14 @@ style="background: {colorScheme.brightBlack}; color: {colorScheme.brightWhite}; 
 
 <style>
 	dialog {
-		max-width: 32em;
+		max-width: 90vw;
 		border-radius: 0.2em;
 		border: none;
 		padding: 0;
+		background: var(--bright-black);
+		color: var(--bright-white);
+		--link-color: var(--bright-cyan);
+		--visited-link-color: var(--magenta);
 	}
 	dialog::backdrop {
 		background: rgba(0, 0, 0, 0.3);
@@ -61,5 +64,12 @@ style="background: {colorScheme.brightBlack}; color: {colorScheme.brightWhite}; 
 	button {
 		display: block;
         margin-left: auto;
+		background: var(--red);
+		color: var(--bright-white);
+		border: none;
+	}
+	button:hover {
+		background: var(--bright-red);
+		cursor: pointer;
 	}
 </style>

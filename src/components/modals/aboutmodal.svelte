@@ -1,19 +1,17 @@
 <script lang="ts">
-    import type { TerminalColorScheme } from '../../types/colors';
     import BaseModal from './basemodal.svelte';
 
     export let open:Boolean = false;
-    export let colorScheme:TerminalColorScheme;
 </script>
 
-<BaseModal bind:showModal={open} colorScheme={colorScheme}>
+<BaseModal bind:showModal={open}>
     {#snippet header()}
         <h2>About WebsciiQuarium</h2>
     {/snippet}
     <p>
         WebsciiQuarium is an open-source web application that simulates an aquarium using ASCII art. 
         It is inspired by "<a href="https://github.com/cmatsuoka/asciiquarium">asciiquarium</a>" program created by Kirk Baucom, which was written in Perl.
-        I created this project in order to share this gem of the CLI with those who may be unfamiliar or uncomfortable with a terminal.
+        I created this project in order to share this gem of the CLI with those who may be unfamiliar or uncomfortable with a terminal. Whilst also adding my own spin on it.
     </p>
 </BaseModal>
 
