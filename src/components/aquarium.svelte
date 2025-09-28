@@ -79,17 +79,6 @@
     });
     
     
-    // Test to make sure calculations are correct
-    // $: {
-    //     content = "";
-    //     for (let i = 0; i < actualRowCount; i++) {
-    //         if (i === 0 || i === actualRowCount - 1) {
-    //             content +="@".repeat(actualColCount)+ "\n";
-    //             continue;
-    //         }
-    //         content +="@" + "X".repeat(actualColCount-2) + "@" + "\n";
-    //     }
-    // }
     const FRAME_LEN = 16; // milliseconds (~60fps)
     const ONE_SECOND = 60; // 60fps
     const FISH_FREQUENCY = 5*ONE_SECOND; // Frames
