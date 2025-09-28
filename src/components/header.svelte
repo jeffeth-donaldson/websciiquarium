@@ -59,7 +59,7 @@
             </div>
         </div>
         <div class="header-footer">
-            Version {version}
+            Version {version} by: Joshua McClung
         </div>
     </div>
 </div>
