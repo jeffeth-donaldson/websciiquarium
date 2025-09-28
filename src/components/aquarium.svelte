@@ -18,25 +18,7 @@
     // Constants
     const title = "WebsciiQuarium";
     let content = "";
-    const colorScheme:TerminalColorScheme = {
-        name: "Default",
-        black: "#000000",
-        red: "#FF5555",
-        green: "#50FA7B",
-        yellow: "#F1FA8C",
-        blue: "#BD93F9",
-        magenta: "#FF79C6",
-        cyan: "#8BE9FD",
-        white: "#BFBFBF",
-        brightBlack: "#4D4D4D",
-        brightRed: "#FF6E67",
-        brightGreen: "#5AF78E",
-        brightYellow: "#F4F99D",
-        brightBlue: "#CAA9FA",
-        brightMagenta: "#FF92D0",
-        brightCyan: "#9AEDFE",
-        brightWhite: "#E6E6E6",
-    }
+    export let colorScheme:TerminalColorScheme;
     const castle = getCastle(colorScheme);
     const castleDimensions = getSpriteDimensions(castle);
     // Figure out appropriate font size
@@ -57,14 +39,10 @@
     let foreground_kelps:KelpInstance[] = [];
     const asciiField = new AsciiField(actualColCount, actualRowCount); 
     let fontSize = MINIMUM_FONT_SIZE;
-    function fishColorSchemeToList(scheme:TerminalColorScheme):string[] {
-        return [
-            scheme.red, scheme.green, scheme.yellow,
-            scheme.blue, scheme.magenta, scheme.cyan,
-            scheme.brightRed, scheme.brightGreen, scheme.brightYellow,
-            scheme.brightBlue, scheme.brightMagenta, scheme.brightCyan,
-        ];
-    }
+    const fishColorScheme = [
+        "var(--red)", "var(--green)", "var(--yellow)", "var(--blue)", "var(--magenta)", "var(--cyan)", 
+        "var(--bright-red)", "var(--bright-green)", "var(--bright-yellow)", "var(--bright-blue)", "var(--bright-magenta)", "var(--bright-cyan)",
+    ]
     function generateKelps(max_width:number, max_height:number):KelpInstance[] {
         let kelps = [];
         for (let x = 0; x < max_width; x++) {
@@ -101,17 +79,6 @@
     });
     
     
-    // Test to make sure calculations are correct
-    // $: {
-    //     content = "";
-    //     for (let i = 0; i < actualRowCount; i++) {
-    //         if (i === 0 || i === actualRowCount - 1) {
-    //             content +="@".repeat(actualColCount)+ "\n";
-    //             continue;
-    //         }
-    //         content +="@" + "X".repeat(actualColCount-2) + "@" + "\n";
-    //     }
-    // }
     const FRAME_LEN = 16; // milliseconds (~60fps)
     const ONE_SECOND = 60; // 60fps
     const FISH_FREQUENCY = 5*ONE_SECOND; // Frames
@@ -167,7 +134,7 @@
             const fishIndex = Math.floor(Math.random() * allFish.length);
             const myFish = new Fish(fishIndex);
             // Random color scheme from main scheme
-            const colors = choose(fishColorSchemeToList(colorScheme),7);
+            const colors = choose(fishColorScheme,7);
             const speed = Math.random() * 0.5 + 0.1; // Speed between 0.1 and 0.6
             const direction = fishIndex % 2 === 0 ? 'right' : 'left';
             const y = Math.floor(Math.random() * (actualRowCount - myFish.height));
@@ -193,7 +160,7 @@
 
 <style>
     .frame {
-        background-color: #000000;
+        background-color: var(--black);
         box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         /* border-radius: 8px; */
         width:100%;

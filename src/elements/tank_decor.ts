@@ -3,27 +3,27 @@ import type { Pixel } from "../types/aquarium";
 import type { TerminalColorScheme } from "../types/colors";
 
 function mapColorCodeToColor(code: string, colorScheme: TerminalColorScheme): string | null {
-    switch(code) {
-        case 'k': return colorScheme.black;
-        case 'r': return colorScheme.red;
-        case 'g': return colorScheme.green;
-        case 'y': return colorScheme.yellow;
-        case 'b': return colorScheme.blue;
-        case 'm': return colorScheme.magenta;
-        case 'c': return colorScheme.cyan;
-        case 'w': return colorScheme.white;
-        case 'K': return colorScheme.brightBlack;
-        case 'R': return colorScheme.brightRed;
-        case 'G': return colorScheme.brightGreen;
-        case 'Y': return colorScheme.brightYellow;
-        case 'B': return colorScheme.brightBlue;
-        case 'M': return colorScheme.brightMagenta;
-        case 'C': return colorScheme.brightCyan;
-        case 'W': return colorScheme.brightWhite;
-        case ' ': return null; // Transparent
-        case 'x': return null; // Erase (treat as transparent)
-        default: return colorScheme.white; // Default to white if unknown
-    }
+    const colorMap: Record<string, string|null> = {
+        'k': 'var(--black)',
+        'r': 'var(--red)',
+        'g': 'var(--green)',
+        'y': 'var(--yellow)',
+        'b': 'var(--blue)',
+        'm': 'var(--magenta)',
+        'c': 'var(--cyan)',
+        'w': 'var(--white)',
+        'K': 'var(--bright-black)',
+        'R': 'var(--bright-red)',
+        'G': 'var(--bright-green)',
+        'Y': 'var(--bright-yellow)',
+        'B': 'var(--bright-blue)',
+        'M': 'var(--bright-magenta)',
+        'C': 'var(--bright-cyan)',
+        'W': 'var(--bright-white)',
+        ' ': null, // Transparent
+        'x': null  // Erase (treat as transparent)
+    };
+    return colorMap[code] ?? 'var(--white)';
 }
 
 export function getSpriteDimensions(pixels:Pixel[][]): { width: number; height: number } {
