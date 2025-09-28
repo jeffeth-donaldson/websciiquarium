@@ -3,6 +3,7 @@
     import type { TerminalColorScheme } from "../types/colors";
     import Aboutmodal from "./modals/aboutmodal.svelte";
     import Colorsettingsmodal from "./modals/colorsettingsmodal.svelte";
+    import Installmodal from "./modals/installmodal.svelte";
 
     
 
@@ -13,7 +14,7 @@
 
     let aboutVisible:Boolean = false;
     let colorSettingsVisible = false;
-    let showInstall = false;
+    let installVisible = false;
 
     const showAbout = () => {
         aboutVisible = true;
@@ -23,10 +24,14 @@
         colorSettingsVisible = true;
     };
 
+    const showInstall = () => {
+        installVisible = true;
+    };
+
 
     const headerButtons: [string, Function|null|string][] = [
         ['Color Settings', showColorSettings],
-        ['Install', null],
+        ['Install', showInstall],
         ['About', showAbout],
         ['Github', "https://github.com/jeffeth-donaldson/websciiquarium"],
         ['Blog', "https://joshtech-blog.vercel.app"],
@@ -60,6 +65,7 @@
 </div>
 <Aboutmodal bind:open={aboutVisible}/>
 <Colorsettingsmodal bind:open={colorSettingsVisible}/>
+<Installmodal bind:open={installVisible}/>
 
 <style>
     .header-container {

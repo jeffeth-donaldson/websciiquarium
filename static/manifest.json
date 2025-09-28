@@ -1,0 +1,10 @@
+{
+    "short_name": "Websciiquarium",
+    "name": "Websciiquarium",
+    "icons": [],
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "display": "standalone",
+    "scope": "/",
+    "description": "A web-based virtual acquarium based on asciiquarium"
+}
