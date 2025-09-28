@@ -76,6 +76,7 @@ This project is licensed under the MIT License.
 - [asciiquarium](https://github.com/cmatsuoka/asciiquarium) originally by [Kirk Baucom](https://robobunny.com/wp/?cat=11), repository by Claudio Matsuoka
 - [favicon.io](https://favicon.io) for favicon generator
 - SvelteKit, Vite, and the open-source community
+- [patorjk's ASCII art Generator](https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type+Something+&x=none&v=4&h=4&w=80&we=false) for ASCII text logo
 
 ---
 

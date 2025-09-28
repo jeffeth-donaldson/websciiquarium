@@ -97,6 +97,7 @@
         min-width: 320px;
         margin-right: 5rem;
         margin-left: 5rem;
+
     }
     .header-main {
         display: flex;
@@ -125,6 +126,7 @@
         transition: background 0.2s;
         text-decoration: none;
         display: inline-block;
+        text-align: center;
     }
     .header-buttons button:hover,
     .header-buttons a:hover {
@@ -135,6 +137,30 @@
         text-align: right;
         font-size: 0.95rem;
         opacity: 0.7;
+    }
+
+    @media (max-width: 940px) {
+        .header-main {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.5rem;
+        }
+        .header-buttons {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.5rem;
+        }
+        .header-content {
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+        .header-footer {
+            text-align: center;
+        }
+        .header-title {
+            text-align: center;
+        }
     }
 
 </style>
