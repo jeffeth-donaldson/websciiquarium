@@ -4,7 +4,14 @@
 	let dialog:HTMLDialogElement|undefined = $state(); // HTMLDialogElement
 
 	$effect(() => {
-		if (showModal && dialog) dialog.showModal();
+		// When showModal becomes true, open the native dialog
+		if (showModal && dialog) {
+			dialog.showModal();
+		}
+		// When showModal becomes false, close the native dialog if it's open
+		else if (!showModal && dialog && typeof dialog.open !== 'undefined' && dialog.open) {
+			dialog.close();
+		}
 	});
 </script>
 
