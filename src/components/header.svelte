@@ -9,7 +9,7 @@
 
     export let expanded: boolean;
     export let appName: string = 'WebsciiQuarium';
-    export let version: string = 'v1.0.0';
+    export let version: string = 'v1.1.0';
 
 
     let aboutVisible:Boolean = false;
