@@ -3,11 +3,13 @@
     import { currentScheme, colorSchemes, userSchemes } from '../../utils/colors';
     import BaseModal from './basemodal.svelte';
 
-    export let open:Boolean = false;
+    export let open:boolean = false;
+    export let editScheme:TerminalColorScheme|null = null;
 
     let selected = $currentScheme;
     let userColorSchemes = $userSchemes;
     let errorMessage: string = '';
+    let justOpened: boolean = false;
 
     // keys that represent color properties (exclude non-color fields)
     type ColorKey = Exclude<keyof TerminalColorScheme, 'name' | 'custom'>;
@@ -15,14 +17,33 @@
         'black','red','green','yellow','blue','magenta','cyan','white',
         'brightBlack','brightRed','brightGreen','brightYellow','brightBlue','brightMagenta','brightCyan','brightWhite'
     ];
+    let customScheme: TerminalColorScheme = { ...selected, name: 'Custom Scheme' } as TerminalColorScheme;
+    let customSchemeName: string = customScheme.name;
+    function resetCustomScheme() {
+        if (editScheme !== null) {
+            customScheme = { ...editScheme} as TerminalColorScheme
+            customSchemeName = customScheme.name;
+        }
+        else {
+            customScheme = { ...selected, name: 'Custom Scheme' } as TerminalColorScheme;
+            customSchemeName = customScheme.name;
+        }
+    }
 
     // initialize customScheme from selected so it's always defined
-    let customScheme: TerminalColorScheme = { ...selected, name: 'Custom Scheme' } as TerminalColorScheme;
-    let customSchemeName: string = 'Custom Scheme';
-    function resetCustomScheme() {
-        customScheme = { ...selected, name: customSchemeName } as TerminalColorScheme;
+    $: if (open != justOpened) {
+        justOpened = open;
+        if (open) {
+            if (editScheme !== null) {
+            customScheme = { ...editScheme} as TerminalColorScheme
+            }
+            else {
+                customScheme = { ...selected, name: 'Custom Scheme' } as TerminalColorScheme;
+            }
+            customSchemeName = customScheme.name;
+            resetCustomScheme();
+        }
     }
-    resetCustomScheme();
 
     function saveCustomScheme() {
         
@@ -30,19 +51,24 @@
             errorMessage = 'Scheme name cannot be empty.';
             return;
         }
-        // Check for duplicate names in existing schemes
+        // Check for duplicate names in existing schemes        
         const allSchemes = [...colorSchemes, ...userColorSchemes];
-        if (allSchemes.some(scheme => scheme.name === customSchemeName.trim())) {
+        if (editScheme === null && allSchemes.some(scheme => scheme.name === customSchemeName.trim())) {
             errorMessage = 'A scheme with this name already exists.';
             return;
         }
 
-    // Save the custom scheme (use update to avoid stale snapshots)
-    const newScheme: TerminalColorScheme = { ...customScheme, name: customSchemeName.trim(), custom: true };
-    userSchemes.update((schemes) => [...schemes, newScheme]);
-        currentScheme.set(newScheme);
-        open = false;
-        resetCustomScheme();
+        if (editScheme !== null) {
+            // If editing, remove the old scheme first
+            userSchemes.update((schemes) => schemes.filter(s => s.name !== editScheme?.name));
+            editScheme = null;
+        }
+            // Save the custom scheme 
+            const newScheme: TerminalColorScheme = { ...customScheme, name: customSchemeName.trim(), custom: true };
+            userSchemes.update((schemes) => [...schemes, newScheme]);
+                currentScheme.set(newScheme);
+                open = false;
+                resetCustomScheme();
     }
 
     // refs to the native color inputs so we can open the color picker programmatically

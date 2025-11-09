@@ -4,9 +4,11 @@
     import BaseModal from './basemodal.svelte';
     import Createschememodal from './createschememodal.svelte';
 
-    export let open:Boolean = false;
+    export let open:boolean = false;
 
     export let createSchemeVisible:Boolean = false;
+
+    let editScheme: TerminalColorScheme|null = null;
 
     // keep a reactive reference so changes to the stores update the UI
     let selected: TerminalColorScheme;
@@ -20,7 +22,7 @@
         selected = scheme;
     }
 </script>
-<Createschememodal bind:open={createSchemeVisible} />
+<Createschememodal bind:open={createSchemeVisible} bind:editScheme={editScheme} />
 <BaseModal bind:showModal={open}>
     {#snippet header()}
         <h2>Color Scheme Settings</h2>
@@ -80,13 +82,17 @@
                     {/each}
                 </div>
             </div>
-            <button on:click={() => {
+            <button class="delete" on:click={() => {
                 userSchemes.update((schemes) => schemes.filter(s => s.name !== scheme.name));
                 currentScheme.set(colorSchemes[0]);
             }}>&#10005;</button>
+            <button class="edit" on:click={() => {
+                editScheme = scheme;
+                createSchemeVisible = true;
+            }}>Edit</button>
         </div>
     {/each}
-    <button on:click={() => {createSchemeVisible=true}}>Create Custom Scheme</button>
+    <button class="create" on:click={() => {editScheme=null; createSchemeVisible=true;}}>Create Custom Scheme</button>
 </BaseModal>
 
 <style>
@@ -117,5 +123,40 @@
         background: var(--bright-red);
         color: var(--bright-black);
         border: none;
+    }
+    .delete {
+        background: var(--red);
+        color: var(--bright-white);
+        border: none;
+        border-radius: 4px;
+        padding: 0.2em 0.5em;
+        cursor: pointer;
+    }
+    .delete:hover {
+        background: var(--bright-red);
+    }
+    .edit {
+        background: var(--yellow);
+        color: var(--bright-black);
+        border: none;
+        border-radius: 4px;
+        padding: 0.2em 0.5em;
+        cursor: pointer;
+        margin-left: 0.5em;
+    }
+    .edit:hover {
+        background: var(--bright-yellow);
+    }
+    .create {
+        background: var(--green);
+        color: var(--bright-black);
+        border: none;
+        border-radius: 4px;
+        padding: 0.4em 0.8em;
+        cursor: pointer;
+        margin-top: 1em;
+    }
+    .create:hover {
+        background: var(--bright-green);
     }
 </style>
