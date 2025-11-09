@@ -139,14 +139,43 @@ export const colorSchemes: TerminalColorScheme[] = [
     }
 ];
 
-const LOCAL_KEY = 'colorScheme';
+let localSchemesValues: TerminalColorScheme[] = [];
+
+// Local storage for User Schemes
+
+const LOCAL_USER_SCHEMES_KEY = 'userColorSchemes';
+
+function getUserSchemes() {
+    if (typeof localStorage === 'undefined') {
+        return [];
+    }
+    const saved = localStorage.getItem(LOCAL_USER_SCHEMES_KEY);
+    const schemes = saved ? JSON.parse(saved) as TerminalColorScheme[] : [];
+    localSchemesValues = schemes;
+    return schemes;
+}
+
+export const userSchemes = writable<TerminalColorScheme[]>(getUserSchemes());
+
+userSchemes.subscribe((schemes) => {
+    if (typeof localStorage === 'undefined') {
+        return;
+    }
+    localSchemesValues = schemes;
+    localStorage.setItem(LOCAL_USER_SCHEMES_KEY, JSON.stringify(schemes));
+});
+
+// Local storage for Current Scheme
+
+const LOCAL_SELECTED_SCHEME_KEY = 'colorScheme';
 
 function getInitialScheme() {
     if (typeof localStorage === 'undefined') {
         return colorSchemes[0];
     }
-  const saved = localStorage.getItem(LOCAL_KEY);
-  return colorSchemes.find(s => s.name === saved) || colorSchemes[0];
+    
+    const saved = localStorage.getItem(LOCAL_SELECTED_SCHEME_KEY);
+    return [...colorSchemes, ...localSchemesValues].find(s => s.name === saved) || colorSchemes[0];
 }
 
 export const currentScheme = writable(getInitialScheme());
@@ -155,5 +184,5 @@ currentScheme.subscribe((scheme) => {
     if (typeof localStorage === 'undefined') {
         return;
     }
-  localStorage.setItem(LOCAL_KEY, scheme.name);
+    localStorage.setItem(LOCAL_SELECTED_SCHEME_KEY, scheme.name);
 });

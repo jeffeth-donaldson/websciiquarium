@@ -64,8 +64,12 @@ npm run preview
 ## Customization
 
 - **Color Schemes:**
-  - Open the Settings modal to choose your preferred color scheme.
-  - Your selection is saved and will be used on future visits.
+  - Open the Color Settings menu (from the header) where you can:
+    - Choose from several built-in schemes (Default, Solarized, Monokai, Gruvbox, Dracula, etc.).
+    - Create new custom color schemes with a visual color picker for each terminal color (black, red, green, yellow, blue, magenta, cyan, white and their "bright" variants).
+    - Edit or delete your saved custom schemes.
+  - Custom schemes and your currently selected scheme are persisted in browser localStorage so your choices remain across visits.
+  - When you save a new scheme it becomes the active scheme immediately.
 
 ## License
 

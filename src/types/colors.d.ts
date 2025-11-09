@@ -16,4 +16,5 @@ export interface TerminalColorScheme {
     brightMagenta: string;
     brightCyan: string;
     brightWhite: string;
+    custom?: boolean;
 }
